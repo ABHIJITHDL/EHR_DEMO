@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>EHR Blockchain System</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0 auto; max-width: 800px; padding: 20px; }
+        h1, h2 { color: #333; }
+        form { margin-bottom: 20px; }
+        input, button { margin: 10px 0; padding: 5px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>EHR Blockchain System</h1>
+
+<h2>Upload EHR</h2>
+<form id="ehrForm">
+    <input type="file" id="ehrFile" accept=".pdf" required>
+    <input type="text" id="patientId" placeholder="Patient ID" required>
+    <button type="submit">Upload and Transact</button>
+</form>
+
+<h2>Latest Blockchain Blocks</h2>
+<table id="blockTable">
+    <thead>
+    <tr>
+        <th>Block Number</th>
+        <th>Hash</th>
+        <th>Timestamp</th>
+        <th>Transactions</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script>
+    function updateBlocks() {
+        $.get("/api/blocks", function(blocks) {
+            var tbody = $("#blockTable tbody");
+            tbody.empty();
+            blocks.forEach(function(block) {
+                var row = $("<tr>");
+                row.append($("<td>").text(block.number));
+                row.append($("<td>").text(block.hash));
+                row.append($("<td>").text(new Date(block.timestamp * 1000).toLocaleString()));
+                row.append($("<td>").text(block.transactions));
+                tbody.append(row);
+            });
+        });
+    }
+
+    $(document).ready(function() {
+        updateBlocks();
+        setInterval(updateBlocks, 10000);  // Update every 10 seconds
+
+        $("#ehrForm").submit(function(event) {
+            event.preventDefault();
+            var formData = new FormData();
+            formData.append('file', $('#ehrFile')[0].files[0]);
+            formData.append('patientId', $('#patientId').val());
+
+            $.ajax({
+                url: '/api/ehr',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    alert('EHR uploaded successfully. Transaction hash: ' + response.blockchainHash);
+                    updateBlocks();  // Update blocks immediately
+                },
+                error: function() {
+                    alert('Error uploading EHR');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
