@@ -1,5 +1,7 @@
 package com.ehr.EHR.service;
 
+import com.ehr.EHR.dto.BlockDTO;
+import com.ehr.EHR.mapper.BlockMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.Web3j;
@@ -18,12 +20,10 @@ public class BlockchainService {
     private Web3j web3j;
 
 
-    public List<EthBlock.Block> getLatestBlocks(int count) throws IOException{
-        List<EthBlock.Block> blocks=new ArrayList<>();
-        EthBlock.Block latestBlock=web3j.ethGetBlockByNumber(DefaultBlockParameterName.LATEST,false).send().getBlock();
-        blocks.add(latestBlock);
-        System.out.println(latestBlock.getTransactions().getFirst().get());
-        System.out.println(latestBlock.getTransactions());
+    public List<BlockDTO> getLatestBlocks(int count) throws IOException{
+        List<BlockDTO> blocks=new ArrayList<>();
+        EthBlock.Block latestBlock=web3j.ethGetBlockByNumber(DefaultBlockParameterName.LATEST,true).send().getBlock();
+        blocks.add(BlockMapper.mappTOBlockDTO(latestBlock));
         int latest = latestBlock.getNumber().intValue();
         if ( latest < count) {
             count = latest;
@@ -34,9 +34,9 @@ public class BlockchainService {
             BigInteger blockNumber = BigInteger.valueOf(latest-i);
             EthBlock.Block block = web3j.ethGetBlockByNumber(
                     DefaultBlockParameter.valueOf(blockNumber),
-                    false
+                    true
             ).send().getBlock();
-            blocks.add(block);
+            blocks.add(BlockMapper.mappTOBlockDTO(block));
         }
 
         return blocks;

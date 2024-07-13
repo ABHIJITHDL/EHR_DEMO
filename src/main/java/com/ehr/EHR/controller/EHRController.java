@@ -1,5 +1,6 @@
 package com.ehr.EHR.controller;
 
+import com.ehr.EHR.dto.BlockDTO;
 import com.ehr.EHR.model.EHR;
 import com.ehr.EHR.repository.EHRRepository;
 import com.ehr.EHR.service.BlockchainService;
@@ -46,9 +47,9 @@ public class EHRController {
     }
 
     @GetMapping("/blocks")
-    public ResponseEntity<List<EthBlock.Block>> getBlocks(){
+    public ResponseEntity<List<BlockDTO>> getBlocks(@RequestParam(defaultValue = "5") int count){
         try{
-            return new ResponseEntity<>(blockchainService.getLatestBlocks(5),HttpStatus.OK
+            return new ResponseEntity<>(blockchainService.getLatestBlocks(count),HttpStatus.OK
             );
         }catch (IOException e){
             System.out.println(e.getMessage());

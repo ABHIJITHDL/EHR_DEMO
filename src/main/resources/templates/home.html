@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html">
 <head>
     <title>EHR Blockchain System</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -12,9 +13,10 @@
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
     </style>
+    <link rel="stylesheet" data-th-href="@{'/css/output.css'}"/>
 </head>
 <body>
-<h1>EHR Blockchain System</h1>
+<h1 class="text-xl font-bold">EHR Blockchain System</h1>
 
 <h2>Upload EHR</h2>
 <form id="ehrForm">
@@ -28,14 +30,18 @@
     <thead>
     <tr>
         <th>Block Number</th>
-        <th>Hash</th>
+        <th>Block Hash</th>
         <th>Timestamp</th>
-        <th>Transactions</th>
+        <th>Transaction Hash</th>
     </tr>
     </thead>
     <tbody>
     </tbody>
 </table>
+
+<div class="blocks flex ">
+
+</div>
 
 <script>
     function updateBlocks() {
@@ -47,7 +53,7 @@
                 row.append($("<td>").text(block.number));
                 row.append($("<td>").text(block.hash));
                 row.append($("<td>").text(new Date(block.timestamp * 1000).toLocaleString()));
-                row.append($("<td>").text(block.transactions));
+                row.append($("<td>").text(block.transactions[0].hash));
                 tbody.append(row);
             });
         });
@@ -80,5 +86,6 @@
         });
     });
 </script>
+<script data-th-src="@{'/js/script.js'}"></script>
 </body>
 </html>
