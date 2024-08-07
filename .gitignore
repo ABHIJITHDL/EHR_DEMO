@@ -3,6 +3,12 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+/node_modules
+###TEMP###
+/src/main/resources/static/css/input.css
+/src/main/resources/static/css/output.css
+/src/main/resources/static/js/script.js
+tailwind.config.js
 
 ### STS ###
 .apt_generated

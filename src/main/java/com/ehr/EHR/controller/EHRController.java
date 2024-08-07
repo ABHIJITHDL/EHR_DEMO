@@ -10,7 +10,9 @@ import com.ehr.EHR.service.EthereumService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import org.web3j.protocol.core.methods.response.EthBlock;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -64,8 +67,29 @@ public class EHRController {
             return new ResponseEntity<>("No data", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+    @GetMapping("/ehr/latest")
+    public ResponseEntity<byte[]> downloadLatestEHR() {
+        // Retrieve the latest EHR document
+        EHR latestEHR = ehrRepository.findAll().getLast();
+        if (latestEHR == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-    @PostMapping("/ehr")
+        // Get the PDF data
+        byte[] pdfData = latestEHR.getPdfData();
+
+        // Set the response headers and body
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", latestEHR.getFileName());
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfData);
+    }
+
+
+        @PostMapping("/ehr")
     @ResponseBody
     public EHR createEHR(@RequestParam("file")MultipartFile file,
                          @RequestParam("patientId") String patientId) throws Exception {

@@ -29,12 +29,13 @@ public class EthereumService {
 
     private final Web3j web3j;
     private final Credentials credentials;
-    String toAddress = "0xc3845aD38282cc657c9288A783bd74ab01E61D38";
+    String toAddress;
 
     public EthereumService(@Value("${ethereum.node.url}") String nodeUrl,
-                           @Value("${ethereum.private.key}") String privateKey) {
+                           @Value("${ethereum.private.key}") String privateKey,@Value("ethereum.receiver.public.key") String toAddress) {
         this.web3j = Web3j.build(new HttpService(nodeUrl));
         this.credentials = Credentials.create(privateKey);
+        this.toAddress=toAddress;
     }
 
     public BigInteger getChainId() throws Exception {

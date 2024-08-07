@@ -4,8 +4,9 @@
 <head>
     <title>EHR Blockchain System</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
-        body { font-family: Arial, sans-serif; margin: 0 auto; max-width: 800px; padding: 20px; }
+        body { font-family: Arial, sans-serif; margin: 0 ; max-width: 800px; padding: 20px; }
         h1, h2 { color: #333; }
         form { margin-bottom: 20px; }
         input, button { margin: 10px 0; padding: 5px; }
@@ -13,16 +14,17 @@
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
     </style>
-    <link rel="stylesheet" data-th-href="@{'/css/output.css'}"/>
+
 </head>
 <body>
-<h1 class="text-xl font-bold">EHR Blockchain System</h1>
 
-<h2>Upload EHR</h2>
+<h1 >EHR Blockchain System</h1>
+
+<h2 >Upload EHR</h2>
 <form id="ehrForm">
     <input type="file" id="ehrFile" accept=".pdf" required>
     <input type="text" id="patientId" placeholder="Patient ID" required>
-    <button type="submit">Upload and Transact</button>
+    <button type="submit" >Upload and Transact</button>
 </form>
 
 <h2>Latest Blockchain Blocks</h2>
@@ -33,13 +35,14 @@
         <th>Block Hash</th>
         <th>Timestamp</th>
         <th>Transaction Hash</th>
+        <th>Transaction Data</th>
     </tr>
     </thead>
     <tbody>
     </tbody>
 </table>
 
-<div class="blocks flex ">
+<div >
 
 </div>
 
@@ -54,6 +57,7 @@
                 row.append($("<td>").text(block.hash));
                 row.append($("<td>").text(new Date(block.timestamp * 1000).toLocaleString()));
                 row.append($("<td>").text(block.transactions[0].hash));
+                row.append($("<td>").text(block.transactions[0].input));
                 tbody.append(row);
             });
         });
@@ -86,6 +90,6 @@
         });
     });
 </script>
-<script data-th-src="@{'/js/script.js'}"></script>
+
 </body>
 </html>
