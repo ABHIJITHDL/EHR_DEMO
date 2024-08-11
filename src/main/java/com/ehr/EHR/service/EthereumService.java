@@ -32,7 +32,7 @@ public class EthereumService {
     String toAddress;
 
     public EthereumService(@Value("${ethereum.node.url}") String nodeUrl,
-                           @Value("${ethereum.private.key}") String privateKey,@Value("ethereum.receiver.public.key") String toAddress) {
+                           @Value("${ethereum.sender.private.key}") String privateKey,@Value("ethereum.receiver.public.key") String toAddress) {
         this.web3j = Web3j.build(new HttpService(nodeUrl));
         this.credentials = Credentials.create(privateKey);
         this.toAddress=toAddress;
